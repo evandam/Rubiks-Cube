@@ -4,12 +4,11 @@ Created on Sep 5, 2013
 @author: Evan
 '''
 
-class Cube:
+class Cube(object):
     '''
     A representation of a 3x3 Rubik's Cube
     '''
-
-
+    
     def __init__(self, fp):
         '''
         Each side is a 2D array that has a facing color.
@@ -28,12 +27,11 @@ class Cube:
                    WWW
         '''
         
+        # better name for sides? all kind of depends on the perspective...
         self.top, self.bottom, self.left, self.right, self.front, self.back = [], [], [], [], [], []
         
         with open(fp, 'r') as f:
-            lines = f.readlines()
-    
-        lines = [line.replace(' ', '').strip() for line in lines]
+            lines = [line.replace(' ', '').strip() for line in f.readlines()]
         
         self.back   = [list(lines[x])       for x in range(3)]
         self.left   = [list(lines[x][:3])   for x in range(3, 6)]
@@ -52,7 +50,7 @@ class Cube:
             toString += '   %s\n' % (''.join(row))
             
         for row in range(3):
-            ''' print all 3 sides together '''
+            ''' print 3 sides together '''
             toString += ''.join(self.left[row])
             toString += ''.join(self.bottom[row])
             toString += ''.join(self.right[row])
@@ -81,8 +79,8 @@ class Cube:
         pass
     
 if __name__ == '__main__':
-    cube = Cube('state.txt')
-    print cube
+#     cube = Cube('state.txt')
+#     print cube
     
     solved = Cube('solved.txt')
     print solved
