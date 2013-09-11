@@ -10,39 +10,69 @@ class Cube:
     '''
 
 
-    def __init__(self):
+    def __init__(self, fp):
         '''
-        Initialize the cube in solved state.
         Each side is a 2D array that has a facing color.
+        Initialize the cube from a file formatted like: (spaces ignored)
+                   RRR
+                   RRR
+                   RRR
+                GGGYYYBBB
+                GGGYYYBBB
+                GGGYYYBBB
+                   OOO
+                   OOO
+                   OOO
+                   WWW
+                   WWW
+                   WWW
         '''
-        self.top    = [[['R'] * 3] * 3]
-        self.bottom = [[['O'] * 3] * 3]
-        self.left   = [[['Y'] * 3] * 3]
-        self.right  = [[['G'] * 3] * 3]
-        self.front  = [[['B'] * 3] * 3]
-        self.back   = [[['W'] * 3] * 3]
         
-    def printSide(self, side):
-        '''
-        Representation of one side of the cube
-        '''
-        for row in side:
-            for col in row:
-                print col
+        self.top, self.bottom, self.left, self.right, self.front, self.back = [], [], [], [], [], []
+        
+        with open(fp, 'r') as f:
+            lines = f.readlines()
+    
+        lines = [line.replace(' ', '').strip() for line in lines]
+        
+        self.back   = [list(lines[x])       for x in range(3)]
+        self.left   = [list(lines[x][:3])   for x in range(3, 6)]
+        self.bottom = [list(lines[x][3:6])  for x in range(3, 6)]
+        self.right  = [list(lines[x][6:9])  for x in range(3, 6)]
+        self.front  = [list(lines[x])       for x in range(6, 9)]
+        self.top    = [list(lines[x])       for x in range(9, 12)]
+        
+        
+    def __str__(self):
+        ''' Format back to input file '''
+        
+        toString = ''
+        for row in self.back:
+            ''' pad with spaces and print each row on the side '''
+            toString += '   %s\n' % (''.join(row))
+            
+        for row in range(3):
+            ''' print all 3 sides together '''
+            toString += ''.join(self.left[row])
+            toString += ''.join(self.bottom[row])
+            toString += ''.join(self.right[row])
+            toString+= '\n'
+        
+        for row in self.front:
+            toString += '   %s\n' % (''.join(row))
+            
+        for row in self.top:
+            toString += '   %s\n' % (''.join(row))
                 
-    def printCube(self):
-        '''
-        Representation of the entire cube (prints all sides)
-        '''
-        for side in [self.top, self.bottom, self.left, self.right, self.front, self.back]:
-            self.printSide(side)
-            print ''
+        return toString
+            
         
     def rotateX(self, x):
         '''
         Make one clockwise(?) rotation for the given row.
         '''
         pass
+    
     
     def rotateY(self, y):
         '''
@@ -51,6 +81,10 @@ class Cube:
         pass
     
 if __name__ == '__main__':
-    cube = Cube()
-    cube.printCube()
+    cube = Cube('state.txt')
+    print cube
+    
+    solved = Cube('solved.txt')
+    print solved
+    
         
